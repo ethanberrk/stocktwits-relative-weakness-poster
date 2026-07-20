@@ -44,9 +44,12 @@ stockanalysis.com) breaks, the fix must be applied in both repos.
    question framings). Constraint: the line must never claim watcher counts
    are *falling* — we only observe today's count, not its history. Exact
    wording is polished during the Phase 1 preview against real samples.
-4. **Chart accent — downtrend styling.** Same self-rendered matplotlib
-   1-year candlestick (TradingView-light), with the accent treatment tuned
-   for a decline (red where the RS chart's framing celebrates green).
+4. **Chart accent — red on the way down.** Amended during planning: the
+   RS renderer is already direction-neutral (candle colors and the
+   last-price pill follow the data, `src/chart.py`), so a 52-week-low
+   chart renders red-accented with no code change. The flip is delivered
+   as a pinned test asserting a downtrend renders with a red closing
+   candle, so future styling work can't silently break the framing.
 
 ## What stays identical
 
