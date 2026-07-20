@@ -24,10 +24,10 @@ def test_validate_allows_at_gate():
     select.validate(exactly)  # must not raise
 
 
-def test_ranked_eligible_orders_by_fewest_watchers():
+def test_ranked_eligible_orders_by_most_watchers():
     cands = [_c("HIGH", 5000), _c("LOW", 3), _c("MID", 400)]
-    ranked = select.ranked_eligible(cands, posted=[], today=date(2026, 7, 8))
-    assert [c.ticker for c in ranked] == ["LOW", "MID", "HIGH"]
+    ranked = select.ranked_eligible(cands, posted=[], today=date(2026, 7, 20))
+    assert [c.ticker for c in ranked] == ["HIGH", "MID", "LOW"]
 
 
 def test_ranked_eligible_is_not_truncated():
@@ -37,9 +37,9 @@ def test_ranked_eligible_is_not_truncated():
 
 
 def test_ranked_eligible_excludes_below_market_cap():
-    cands = [_c("BIG", 1, mcap=2e9), _c("SMALL", 0, mcap=5e8)]
-    ranked = select.ranked_eligible(cands, posted=[], today=date(2026, 7, 8))
-    assert [c.ticker for c in ranked] == ["BIG"]  # SMALL dropped despite fewer watchers
+    cands = [_c("BIG", 1, mcap=2e9), _c("SMALL", 9999, mcap=5e8)]
+    ranked = select.ranked_eligible(cands, posted=[], today=date(2026, 7, 20))
+    assert [c.ticker for c in ranked] == ["BIG"]  # SMALL dropped despite more watchers
 
 
 def test_ranked_eligible_excludes_blocked():

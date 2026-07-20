@@ -33,9 +33,9 @@ def tick(source: HighsSource, publisher: Publisher, chart_fetch,
     print(f"{len(candidates)} on today's 52wk-high list; "
           f"{len(ranked)} eligible, up to {slots} slots this tick")
 
-    # Walk the ranked list (fewest watchers first), filling up to `slots`
+    # Walk the ranked list (most watchers first), filling up to `slots`
     # posts. A name that fails its symbol check or chart fetch is skipped and
-    # the NEXT eligible name is tried — so an un-chartable fewest-watched name
+    # the NEXT eligible name is tried — so an un-chartable most-watched name
     # can't starve the tick. Everything fallible happens BEFORE recording
     # intent; a skipped name stays eligible for a later tick.
     ready = []

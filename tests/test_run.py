@@ -25,19 +25,19 @@ class FakePublisher:
         return PostResult(post_id="id-" + candidate.ticker, dry_run=False)
 
 
-def test_tick_posts_fewest_watched_and_records_state(tmp_path, monkeypatch):
+def test_tick_posts_most_watched_and_records_state(tmp_path, monkeypatch):
     import config
     monkeypatch.setattr(config, "MAX_PER_TICK", 1)
     monkeypatch.setattr(config, "MAX_PER_DAY", 20)
     sp = tmp_path / "posted.json"
     pub = FakePublisher()
     now = datetime(2026, 7, 8, 14, 0, tzinfo=timezone.utc)  # 10:00 ET Wed
-    done = run.tick(FakeSource([_c("HIGH", 900), _c("LOW", 3)]), pub,
+    done = run.tick(FakeSource([_c("CROWD", 900), _c("QUIET", 3)]), pub,
                     chart_fetch=lambda c: b"PNG", state_path=sp, now_utc=now)
-    assert done == ["LOW"]
-    assert pub.posted == [("LOW", "$LOW undiscovered breakout with 3 watchers")]
-    e = [p for p in state.load_posted(sp) if p["ticker"] == "LOW"][0]
-    assert e["status"] == "posted" and e["post_id"] == "id-LOW"
+    assert done == ["CROWD"]
+    assert pub.posted == [("CROWD", "$CROWD undiscovered breakout with 900 watchers")]
+    e = [p for p in state.load_posted(sp) if p["ticker"] == "CROWD"][0]
+    assert e["status"] == "posted" and e["post_id"] == "id-CROWD"
 
 
 def test_tick_noop_outside_market_hours(tmp_path):
@@ -66,11 +66,11 @@ def test_tick_backfills_when_top_pick_chart_fails(tmp_path, monkeypatch):
     now = datetime(2026, 7, 8, 14, 0, tzinfo=timezone.utc)  # 10:00 ET Wed
 
     def chart_fetch(c):
-        if c.ticker == "LOW":          # fewest-watched name can't be charted
-            raise ChartError("no chart for LOW")
+        if c.ticker == "CROWD":        # most-watched name can't be charted
+            raise ChartError("no chart for CROWD")
         return b"PNG"
 
-    done = run.tick(FakeSource([_c("LOW", 3), _c("MID", 50)]), pub,
+    done = run.tick(FakeSource([_c("CROWD", 900), _c("MID", 50)]), pub,
                     chart_fetch=chart_fetch, state_path=sp, now_utc=now)
-    assert done == ["MID"]  # backfilled past the un-chartable fewest-watched name
+    assert done == ["MID"]  # backfilled past the un-chartable most-watched name
     assert pub.posted == [("MID", "$MID undiscovered breakout with 50 watchers")]
