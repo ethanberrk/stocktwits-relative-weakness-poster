@@ -4,7 +4,7 @@ Replaces the chart-img API: history comes keyless from stockanalysis.com and
 the chart is drawn in-process in the TradingView light style (up #089981,
 down #F23645, recessive grid, right-hand price axis, last-price pill). The
 daily history endpoint lags one session, so today's candle is appended from
-the live quote — a breakout post whose chart stopped yesterday would be
+the live quote — a breakdown post whose chart stopped yesterday would be
 missing its own move.
 """
 from datetime import date, datetime, timedelta

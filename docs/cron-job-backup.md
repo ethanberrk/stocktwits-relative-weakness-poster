@@ -1,21 +1,23 @@
-# cron-job.org backup trigger
+# cron-job.org trigger
 
-GitHub Actions' scheduled (`cron:`) runs are best-effort — under load they're
-routinely delayed 10–30+ minutes or skipped entirely. The `tick` workflow's own
-`schedule:` is the primary trigger; this is a **backstop**: an external
-cron-job.org job that fires the workflow via GitHub's `workflow_dispatch` API on
-a precise schedule, so a skipped GitHub tick still runs.
+The `tick` workflow has no GitHub Actions `schedule:` of its own — it is
+`workflow_dispatch`-only. Every tick is driven **solely** by an external
+cron-job.org job that calls GitHub's `workflow_dispatch` API on a precise
+schedule. GitHub's own `schedule:` cron is intentionally not used here: it delivers
+only a fraction of scheduled slots and can fire up to 45 minutes late, which
+in live mode risks landing in a different half-hour window than intended and
+posting an extra ticker before exhausting the daily cap early.
 
-This mirrors the setup on the `stocktwits-52wk-poster` and RS-poster repos. It
-must be created in **your** cron-job.org account (it needs a GitHub token this
-repo can't hold).
+This mirrors the setup on the `stocktwits-52wk-poster` repo (dispatch-only,
+cron-job.org-driven). It must be created in **your** cron-job.org account (it
+needs a GitHub token this repo can't hold).
 
 ## Why it's safe
 
 The workflow declares `concurrency: {group: tick, cancel-in-progress: false}`.
-If the GitHub cron and the cron-job.org trigger ever overlap, the second run
-**queues behind the first** instead of running concurrently — so the backup
-never causes a double tick. Combined with the write-ahead intent + at-most-once
+If a dispatch ever lands while a previous run is still in flight, the new run
+**queues behind it** instead of running concurrently — so overlapping fires
+never cause a double tick. Combined with the write-ahead intent + at-most-once
 state, no post is ever duplicated, in preview or live mode.
 
 ## One-time setup
@@ -49,9 +51,7 @@ Content-Type: application/json
 User-Agent: rw-poster-cronjob
 ```
 
-Schedule — every 30 min during market hours, **offset from GitHub's cron** so
-the backup lands in the gap when GitHub is late. GitHub runs at `:00`/`:30`; set
-cron-job.org to `:05`/`:35`:
+Schedule — every 30 min during market hours, on the `:05`/`:35` slots:
 
 ```
 Minutes:  5,35
@@ -59,9 +59,9 @@ Hours:    13-21 (UTC)
 Days:     Mon-Fri
 ```
 
-(GitHub's schedule is UTC; `13-21 UTC` covers 9:30am–4pm ET across EDT/EST, and
-`run.py` gates market hours precisely, so a slightly-early/late backup fire that
-lands outside 9:30–16:00 ET is a harmless no-op.)
+(cron-job.org schedules run in UTC; `13-21 UTC` covers 9:30am–4pm ET across
+EDT/EST, and `run.py` gates market hours precisely, so a slightly-early/late
+fire that lands outside 9:30–16:00 ET is a harmless no-op.)
 
 A successful dispatch returns HTTP **204** with an empty body.
 

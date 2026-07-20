@@ -5,10 +5,10 @@ on:
   # workflow_dispatch on the :05/:35 slots, 13:00-21:59 UTC weekdays (see
   # docs/cron-job-backup.md); run.py gates market hours precisely. GitHub's
   # own `schedule` cron is intentionally not used here, mirroring the
-  # 52wk-poster and RS-poster repos: it delivers only a fraction of slots and
-  # can fire up to 45 min late, and in live mode a late fire lands in a
-  # different half-hour window than the dispatch, posting an extra ticker and
-  # exhausting the daily cap early.
+  # 52wk-poster repo: it delivers only a fraction of slots and can fire up to
+  # 45 min late, and in live mode a late fire lands in a different half-hour
+  # window than the dispatch, posting an extra ticker and exhausting the
+  # daily cap early.
   workflow_dispatch: {}
 
 permissions:

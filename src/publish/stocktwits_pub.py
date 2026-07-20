@@ -18,7 +18,7 @@ from src.source.base import Candidate
 # The multipart file field for the chart image. Unconfirmed against current
 # Stocktwits docs (offline); the first live post validates it. One line to fix.
 CHART_FIELD = "chart"
-_BOUNDARY = "----stocktwits52wkPosterBoundary7MA4YWxkTrZu0gW"
+_BOUNDARY = "----stocktwitsRWPosterBoundary7MA4YWxkTrZu0gW"
 
 
 class PublishError(Exception):

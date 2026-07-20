@@ -50,7 +50,7 @@ def _build_candidate(ticker: str, name: str, quote: dict,
     wc = (watch or {}).get("watchlist_count")
     prefix = _EXCHANGE_PREFIX.get((watch or {}).get("exchange"))
     price = (quote or {}).get("regularMarketPrice")
-    if not mcap or mcap < config.MIN_MARKET_CAP:    # >= $1B, matches select.pick
+    if not mcap or mcap < config.MIN_MARKET_CAP:    # >= $1B, matches select.ranked_eligible
         return None
     if wc is None:                                  # need a ranking axis
         return None

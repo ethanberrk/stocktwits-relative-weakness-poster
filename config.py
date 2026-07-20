@@ -35,7 +35,8 @@ STOCKTWITS_SYMBOL_URL = "https://api.stocktwits.com/api/2/streams/symbol/{symbol
 STOCKTWITS_CREATE_URL = "https://api.stocktwits.com/api/2/messages/create.json"
 STOCKTWITS_USER_AGENT = "stocktwits-relative-weakness-poster/1.0"
 
-# WSJ Market Data Center async feed for New 52-Week Highs (refreshes ~5 min).
+# WSJ Market Data Center async feed carries both new 52-week highs and lows
+# (refreshes ~5 min); this repo reads the lows side.
 WSJ_MDC_URL = ("https://www.wsj.com/market-data/stocks/newfiftytwoweekhighsandlows?id="
                + urllib.parse.quote('{"application":"WSJ","refreshInterval":300000}')
                + "&type=mdc_fiftytwoweek")

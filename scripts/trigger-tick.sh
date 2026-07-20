@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Backup trigger for the `tick` workflow — a backstop for GitHub Actions'
-# scheduled runs, which are frequently delayed or skipped under load. This is
-# the exact GitHub API call the cron-job.org backup job should make; run it
-# from any scheduler (or by hand) to force a tick.
+# Fires the tick workflow via workflow_dispatch (cron-job.org is the sole
+# scheduler; see docs/cron-job-backup.md). This is the exact GitHub API call
+# the cron-job.org job makes; run it from any scheduler (or by hand) to force
+# a tick.
 #
-# The workflow's `concurrency: {group: tick, cancel-in-progress: false}` means a
-# backup trigger that overlaps the GitHub cron just queues behind it — it never
+# The workflow's `concurrency: {group: tick, cancel-in-progress: false}` means
+# an overlapping dispatch just queues behind the run in flight — it never
 # double-runs, so this is safe even in live mode (write-ahead + at-most-once
 # still hold).
 #
