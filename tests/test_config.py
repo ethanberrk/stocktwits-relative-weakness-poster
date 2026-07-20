@@ -32,3 +32,10 @@ def test_stockanalysis_urls_present():
 def test_chart_dimensions():
     assert config.CHART_WIDTH == 800
     assert config.CHART_HEIGHT == 450
+
+
+def test_plausible_lows_gate_is_2000():
+    # Lows legitimately explode on broad selloff days (unlike highs), so the
+    # broken-feed gate sits at 2000; volume control is the per-tick/day caps.
+    assert config.MAX_PLAUSIBLE_LOWS == 2000
+    assert not hasattr(config, "MAX_PLAUSIBLE_HIGHS")

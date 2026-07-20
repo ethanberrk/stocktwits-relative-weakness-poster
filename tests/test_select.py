@@ -14,13 +14,13 @@ def _c(ticker, watchers, mcap=2e9):
 
 
 def test_validate_raises_over_gate():
-    many = [_c(f"T{i}", i) for i in range(config.MAX_PLAUSIBLE_HIGHS + 1)]
+    many = [_c(f"T{i}", i) for i in range(config.MAX_PLAUSIBLE_LOWS + 1)]
     with pytest.raises(select.ValidationError):
         select.validate(many)
 
 
 def test_validate_allows_at_gate():
-    exactly = [_c(f"T{i}", i) for i in range(config.MAX_PLAUSIBLE_HIGHS)]
+    exactly = [_c(f"T{i}", i) for i in range(config.MAX_PLAUSIBLE_LOWS)]
     select.validate(exactly)  # must not raise
 
 

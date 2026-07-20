@@ -10,10 +10,10 @@ class ValidationError(Exception):
 
 
 def validate(candidates: list[Candidate]) -> None:
-    if len(candidates) > config.MAX_PLAUSIBLE_HIGHS:
+    if len(candidates) > config.MAX_PLAUSIBLE_LOWS:
         raise ValidationError(
-            f"{len(candidates)} '52-week highs' is implausible "
-            f"(gate: {config.MAX_PLAUSIBLE_HIGHS}); refusing to post")
+            f"{len(candidates)} '52-week lows' is implausible "
+            f"(gate: {config.MAX_PLAUSIBLE_LOWS}); refusing to post")
 
 
 def ranked_eligible(candidates: list[Candidate], posted: list[dict],
