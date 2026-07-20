@@ -15,7 +15,7 @@ from src.publish.base import Publisher, compose_post_text
 from src.publish.dryrun import DryRunPublisher
 from src.publish.stocktwits_pub import PublishError, StocktwitsPublisher
 from src.source.base import LowsSource, SourceError
-from src.source.rs_source import RSSource
+from src.source.rw_source import RWSource
 
 def tick(source: LowsSource, publisher: Publisher, chart_fetch,
          state_path: Path, now_utc: datetime, force: bool = False,
@@ -114,7 +114,7 @@ def main() -> int:
     today = now.astimezone(ZoneInfo(config.MARKET_TZ)).date()
     publisher = build_publisher(args.live, args.output, today)
     try:
-        tick(RSSource(), publisher,
+        tick(RWSource(), publisher,
              fetch_chart_png, args.state, now, args.force,
              symbol_check=stocktwits.symbol_exists,
              state_sync=_git_sync_state if args.sync_state else None)

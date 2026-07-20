@@ -1,8 +1,9 @@
-"""Relative-Strength source: WSJ new-52wk-highs universe, ranked-later by
-watchers. Ported from stocktwits-relative-strength/fetch_wsj.py.
+"""Relative-Weakness source: WSJ new-52wk-lows universe, ranked-later by
+watchers. Ported from stocktwits-relative-strength/fetch_wsj.py, inverted to
+the lows side.
 
-Universe:  WSJ Market Data Center "New 52 Week Highs" feed.
-Enrich:    Yahoo v7 bulk quote (cookie+crumb) — mcap/price/%chg/52wk high/type.
+Universe:  WSJ Market Data Center "New 52 Week Lows" feed.
+Enrich:    Yahoo v7 bulk quote (cookie+crumb) — mcap/price/%chg/52wk low/type.
            Falls back to stockanalysis.com per-ticker (keyless) when Yahoo
            returns nothing: Yahoo 429s datacenter IPs (incl. GitHub runners),
            which on 2026-07-09 silently zeroed out every candidate all day.
@@ -65,13 +66,13 @@ def _build_candidate(ticker: str, name: str, quote: dict,
         price=float(price),
         pct_change_today=float(quote.get("regularMarketChangePercent") or 0.0),
         market_cap=float(mcap),
-        week52_low=float(quote.get("fiftyTwoWeekHigh") or 0.0),
+        week52_low=float(quote.get("fiftyTwoWeekLow") or 0.0),
         security_type=quote.get("quoteType") or "",
         watchers=int(wc),
     )
 
 
-class RSSource(LowsSource):
+class RWSource(LowsSource):
     def _wsj_universe(self) -> list[tuple[str, str]]:
         d = get_json(config.WSJ_MDC_URL)
         data = (d or {}).get("data") or {}
@@ -79,7 +80,7 @@ class RSSource(LowsSource):
         for _section, payload in data.items():
             if not isinstance(payload, dict):
                 continue
-            for r in payload.get("highs") or []:
+            for r in payload.get("lows") or []:
                 tk = (r.get("ticker") or "").strip()
                 nm = (r.get("name") or "").strip()
                 if not tk or tk in seen:
@@ -117,7 +118,7 @@ class RSSource(LowsSource):
     def _sa_quotes(self, tickers: list[str]) -> dict:
         """stockanalysis.com fallback, shaped like the Yahoo v7 result so
         _build_candidate needs no branching. Two keyless requests per ticker:
-        the quote API (price/%chg/52wk high) and the stock page's SvelteKit
+        the quote API (price/%chg/52wk low) and the stock page's SvelteKit
         __data.json (market cap, encoded as key->index into a values array)."""
         def one(tk):
             q = (get_json(config.SA_QUOTE_URL.format(ticker=tk)) or {}).get("data")
@@ -137,7 +138,7 @@ class RSSource(LowsSource):
             return tk, {"marketCap": mcap,
                         "regularMarketPrice": float(q["p"]),
                         "regularMarketChangePercent": float(q.get("cp") or 0.0),
-                        "fiftyTwoWeekHigh": float(q.get("h52") or 0.0),
+                        "fiftyTwoWeekLow": float(q.get("l52") or 0.0),
                         "quoteType": "EQUITY"}
         out = {}
         with ThreadPoolExecutor(max_workers=8) as ex:
@@ -163,7 +164,7 @@ class RSSource(LowsSource):
     def fetch_candidates(self) -> list[Candidate]:
         pairs = self._wsj_universe()
         if not pairs:
-            raise SourceError("WSJ feed returned zero new highs; feed looks broken")
+            raise SourceError("WSJ feed returned zero new lows; feed looks broken")
         names = {t: n for t, n in pairs}
         tickers = [t for t, _ in pairs]
         quotes = self._yahoo_quotes(tickers)
