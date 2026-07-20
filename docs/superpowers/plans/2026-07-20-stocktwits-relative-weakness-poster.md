@@ -43,10 +43,14 @@ rsync -a \
   --exclude '.git' --exclude '__pycache__' --exclude '.pytest_cache' \
   --exclude '.venv' --exclude 'state/' --exclude 'output/' \
   --exclude 'docs/superpowers/' \
+  --exclude '.impeccable/' --exclude '.superpowers/' \
   /Users/ethanberk/stocktwits-relative-strength-poster/ ./
 mkdir -p state output
 printf '{\n  "posts": []\n}\n' > state/posted.json
+touch output/.gitkeep
 ```
+
+The `.gitkeep` is load-bearing: the workflow's commit step runs `git add state output`, which exits 128 (`fatal: pathspec 'output' did not match any files`) on a fresh CI checkout if `output/` was never committed — every pre-open or no-op tick would run red. The RS repo never hit this only because its `output/` files were committed long ago.
 
 - [ ] **Step 2: Install deps and run the full suite — must pass untouched**
 
@@ -235,6 +239,8 @@ def ranked_eligible(candidates: list[Candidate], posted: list[dict],
     return eligible
 ```
 
+Also update the now-contradicting walk-comment in `run.py:36-40`: `# Walk the ranked list (fewest watchers first), ...` becomes `# Walk the ranked list (most watchers first), ...` and `an un-chartable fewest-watched name` becomes `an un-chartable most-watched name`.
+
 - [ ] **Step 4: Run the full suite**
 
 Run: `python -m pytest -q`
@@ -349,7 +355,7 @@ git mv tests/test_rs_source.py tests/test_rw_source.py
 - [ ] **Step 2: Write the failing tests**
 
 In `tests/test_rw_source.py`:
-- Replace all imports of `rs_source`/`RSSource` with `rw_source`/`RWSource` (module import line becomes `from src.source.rw_source import RWSource, _build_candidate, _EXCHANGE_PREFIX`; the two in-test `from src.source import rs_source` / `monkeypatch.setattr(rs_source, ...)` occurrences become `rw_source`).
+- Replace all imports of `rs_source`/`RSSource` with `rw_source`/`RWSource`. There are FIVE reference sites: the top-of-file `from src.source.rs_source import RSSource, _build_candidate, _EXCHANGE_PREFIX`; the in-function `from src.source.rs_source import _parse_abbrev_number` (line 100); and the two `from src.source import rs_source` + `monkeypatch.setattr(rs_source, ...)` pairs (lines 111/120 and 131/138). Verify with `grep -n rs_source tests/test_rw_source.py` → no hits.
 - In every quote fixture, replace `"fiftyTwoWeekHigh": <x>` with `"fiftyTwoWeekLow": <x>`.
 - Replace the SA fixture helper and its assertion test:
 
@@ -389,7 +395,7 @@ def test_wsj_universe_reads_lows_not_highs(monkeypatch):
 - [ ] **Step 3: Run tests to verify they fail**
 
 Run: `python -m pytest tests/test_rw_source.py -q`
-Expected: FAIL — `_wsj_universe` returns `[("HI", ...)]`-side data and quote dicts lack `fiftyTwoWeekLow`.
+Expected: FAIL at collection with `ImportError: cannot import name 'RWSource'` — the module still defines `RSSource` until Step 4. (The lows/`fiftyTwoWeekLow` assertions get their red run implicitly; the import error is the correct failure at this point.)
 
 - [ ] **Step 4: Implement the inversion in `src/source/rw_source.py`**
 
@@ -536,8 +542,9 @@ git commit -m "test: pin red-accent rendering on a downtrend chart (spec flip #4
 
 **Files:**
 - Modify: `run.py:33,81` (tick log line; git bot name)
+- Modify: `config.py:32` (`STOCKTWITS_USER_AGENT`), `pyproject.toml` (`name`)
 - Modify: `.github/workflows/tick.yml` (preview mode, new account comment, bot name)
-- Modify: `scripts/trigger-tick.sh`, `docs/cron-job-backup.md` (repo URL `ethanberrk/stocktwits-relative-weakness-poster`)
+- Modify: `scripts/trigger-tick.sh`, `docs/cron-job-backup.md` (repo URL `ethanberrk/stocktwits-relative-weakness-poster`; the example `User-Agent: rs-poster-cronjob` header becomes `rw-poster-cronjob`)
 - Modify: `README.md` (full rewrite, content below)
 
 **Interfaces:**
@@ -554,6 +561,19 @@ Line 33's print becomes:
 ```
 
 Line 81's git identity becomes `"user.name=rw-poster-bot"`. Also update the docstring at the top of `_git_sync_state`'s caller context if it names RS.
+
+In `config.py`, line 32 becomes:
+
+```python
+STOCKTWITS_USER_AGENT = "stocktwits-relative-weakness-poster/1.0"
+```
+
+(this string is sent on every Stocktwits API call — the new account must not identify itself as the RS poster). In `pyproject.toml`, `name` becomes `stocktwits-relative-weakness-poster`. Add to `tests/test_config.py`:
+
+```python
+def test_user_agent_is_this_poster():
+    assert config.STOCKTWITS_USER_AGENT == "stocktwits-relative-weakness-poster/1.0"
+```
 
 - [ ] **Step 2: Workflow — Phase 1 preview**
 
@@ -577,18 +597,26 @@ Line 81's git identity becomes `"user.name=rw-poster-bot"`. Also update the docs
 
 - [ ] **Step 3: scripts + cron doc**
 
-In `scripts/trigger-tick.sh` and `docs/cron-job-backup.md`, replace every `stocktwits-relative-strength-poster` with `stocktwits-relative-weakness-poster` (keep owner `ethanberrk`).
-Run: `grep -rn "relative-strength" scripts docs .github README.md run.py src tests | grep -v superpowers`
+In `scripts/trigger-tick.sh` and `docs/cron-job-backup.md`, replace every `stocktwits-relative-strength-poster` with `stocktwits-relative-weakness-poster` (keep owner `ethanberrk`), and `rs-poster-cronjob` with `rw-poster-cronjob`.
+Run: `grep -rn "relative-strength\|rs-poster" scripts docs .github README.md run.py config.py pyproject.toml src tests | grep -v superpowers`
 Expected after edits: no hits outside `docs/superpowers/` (the spec/plan legitimately reference the RS repo).
 
 - [ ] **Step 4: README rewrite**
 
 Replace `README.md` body with the RS README's structure inverted — it must state: most-watched >$1B US common stocks at new 52-week lows, dedicated NEW Stocktwits account, `$TICKER crowded breakdown — {N} watchers along for the slide`, the Phase 1 preview / Phase 2 live rollout, the pipeline line (WSJ new-52wk-LOWS feed → quotes with stockanalysis fallback → watchers → rank DESCENDING → 1-yr chart → publisher), the 2000 gate rationale, and the same Ops/Durability sections with this repo's URLs.
 
-- [ ] **Step 5: Full suite + local end-to-end dry run**
+- [ ] **Step 5: Full suite + local end-to-end dry run (scratch paths — never the real state)**
 
-Run: `python -m pytest -q && python run.py --force`
-Expected: tests PASS; the dry run prints `N on today's 52wk-low list ...` and writes `output/<today>/<TICKER>.png` + `.txt` whose text reads `$... crowded breakdown — ... watchers along for the slide`. Inspect one PNG by eye (downtrending chart, red-heavy).
+Run:
+
+```bash
+python -m pytest -q
+SCRATCH=$(mktemp -d)
+python run.py --force --state "$SCRATCH/posted.json" --output "$SCRATCH/out"
+ls "$SCRATCH"/out/*/ && cat "$SCRATCH"/out/*/*.txt
+```
+
+Expected: tests PASS; the dry run prints `N on today's 52wk-low list ...` and writes `<TICKER>.png` + `.txt` whose text reads `$... crowded breakdown — ... watchers along for the slide`. Inspect one PNG by eye (downtrending chart, red-heavy). Scratch paths are mandatory: the default `state/posted.json` would record these local samples as real posts, consuming the day's caps and blocking those tickers from the actual Phase 1 preview — and Step 6's `git add -A` would commit the pollution. Before Step 6, verify: `git status --short state output` shows nothing.
 
 - [ ] **Step 6: Commit**
 
