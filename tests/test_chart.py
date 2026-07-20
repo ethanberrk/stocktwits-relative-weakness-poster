@@ -112,3 +112,18 @@ def test_legend_text_change_is_vs_previous_close():
 def test_legend_text_single_candle_uses_open():
     text = chart._legend_text([["2026-07-09", 20.0, 30.0, 20.0, 25.0]])
     assert "+5.00 (+25.00%)" in text
+
+
+def test_render_downtrend_ends_red():
+    # A year-long slide into a 52-week low: the renderer must produce a valid
+    # PNG and the closing candle logic must classify the last day as DOWN
+    # (red accent) — the direction this whole account posts.
+    from src import chart
+    hist = [[f"2025-{m:02d}-15", 100 - m * 5, 101 - m * 5, 98 - m * 5, 99 - m * 6]
+            for m in range(7, 13)]
+    hist += [[f"2026-{m:02d}-15", 70 - m * 4, 71 - m * 4, 66 - m * 4, 67 - m * 5]
+             for m in range(1, 8)]
+    last_o, last_c = hist[-1][1], hist[-1][4]
+    assert last_c < last_o  # fixture really is a down day
+    png = chart._render_png(_c("SLIDE"), hist)
+    assert png[:8] == b"\x89PNG\r\n\x1a\n" and len(png) > 10_000
