@@ -1,6 +1,5 @@
 """Relative-Weakness source: WSJ new-52wk-lows universe, ranked-later by
-watchers. Ported from stocktwits-relative-strength/fetch_wsj.py, inverted to
-the lows side.
+watchers. Ported from the RS poster's fetch_wsj.py, inverted to the lows side.
 
 Universe:  WSJ Market Data Center "New 52 Week Lows" feed.
 Enrich:    Yahoo v7 bulk quote (cookie+crumb) — mcap/price/%chg/52wk low/type.

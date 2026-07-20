@@ -11,11 +11,11 @@
 #
 # Usage: GITHUB_TOKEN=<pat> ./scripts/trigger-tick.sh
 #   GITHUB_TOKEN — a PAT with Actions read/write on this repo (see docs/cron-job-backup.md)
-#   REPO         — override target repo (default: ethanberrk/stocktwits-relative-strength-poster)
+#   REPO         — override target repo (default: ethanberrk/stocktwits-relative-weakness-poster)
 #   REF          — branch to run on (default: main)
 set -euo pipefail
 : "${GITHUB_TOKEN:?set GITHUB_TOKEN to a PAT with Actions read/write on this repo}"
-REPO="${REPO:-ethanberrk/stocktwits-relative-strength-poster}"
+REPO="${REPO:-ethanberrk/stocktwits-relative-weakness-poster}"
 REF="${REF:-main}"
 curl -sS -X POST \
   -H "Accept: application/vnd.github+json" \

@@ -6,8 +6,9 @@ routinely delayed 10–30+ minutes or skipped entirely. The `tick` workflow's ow
 cron-job.org job that fires the workflow via GitHub's `workflow_dispatch` API on
 a precise schedule, so a skipped GitHub tick still runs.
 
-This mirrors the setup on the `stocktwits-52wk-poster`. It must be created in
-**your** cron-job.org account (it needs a GitHub token this repo can't hold).
+This mirrors the setup on the `stocktwits-52wk-poster` and RS-poster repos. It
+must be created in **your** cron-job.org account (it needs a GitHub token this
+repo can't hold).
 
 ## Why it's safe
 
@@ -24,7 +25,7 @@ state, no post is ever duplicated, in preview or live mode.
 A **fine-grained personal access token** (github.com → Settings → Developer
 settings → Fine-grained tokens):
 
-- **Repository access:** only `ethanberrk/stocktwits-relative-strength-poster`.
+- **Repository access:** only `ethanberrk/stocktwits-relative-weakness-poster`.
 - **Permissions:** Repository → **Actions: Read and write**.
 - Copy the token (`github_pat_…`).
 
@@ -34,7 +35,7 @@ New cronjob → Advanced / raw request:
 
 | Field | Value |
 | --- | --- |
-| **URL** | `https://api.github.com/repos/ethanberrk/stocktwits-relative-strength-poster/actions/workflows/tick.yml/dispatches` |
+| **URL** | `https://api.github.com/repos/ethanberrk/stocktwits-relative-weakness-poster/actions/workflows/tick.yml/dispatches` |
 | **Request method** | `POST` |
 | **Request body** | `{"ref":"main"}` |
 
@@ -45,7 +46,7 @@ Accept: application/vnd.github+json
 Authorization: Bearer github_pat_YOUR_TOKEN
 X-GitHub-Api-Version: 2022-11-28
 Content-Type: application/json
-User-Agent: rs-poster-cronjob
+User-Agent: rw-poster-cronjob
 ```
 
 Schedule — every 30 min during market hours, **offset from GitHub's cron** so

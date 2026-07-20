@@ -39,3 +39,7 @@ def test_plausible_lows_gate_is_2000():
     # broken-feed gate sits at 2000; volume control is the per-tick/day caps.
     assert config.MAX_PLAUSIBLE_LOWS == 2000
     assert not hasattr(config, "MAX_PLAUSIBLE_HIGHS")
+
+
+def test_user_agent_is_this_poster():
+    assert config.STOCKTWITS_USER_AGENT == "stocktwits-relative-weakness-poster/1.0"

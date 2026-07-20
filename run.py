@@ -30,7 +30,7 @@ def tick(source: LowsSource, publisher: Publisher, chart_fetch,
     posted = state.load_posted(state_path)
     ranked = select.ranked_eligible(candidates, posted, today)
     slots = select.slot_count(posted, today)
-    print(f"{len(candidates)} on today's 52wk-high list; "
+    print(f"{len(candidates)} on today's 52wk-low list; "
           f"{len(ranked)} eligible, up to {slots} slots this tick")
 
     # Walk the ranked list (most watchers first), filling up to `slots`
@@ -78,7 +78,7 @@ def tick(source: LowsSource, publisher: Publisher, chart_fetch,
 def _git_sync_state() -> None:
     """Commit and push pending intents before posting. Any failure raises,
     aborting the tick BEFORE anything is posted — the safe side."""
-    git = ["git", "-c", "user.name=rs-poster-bot",
+    git = ["git", "-c", "user.name=rw-poster-bot",
            "-c", "user.email=actions@users.noreply.github.com"]
     subprocess.run(git + ["add", "state"], check=True)
     if subprocess.run(["git", "diff", "--cached", "--quiet"]).returncode == 0:
