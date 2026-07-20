@@ -1,0 +1,57 @@
+# .github/workflows/tick.yml
+name: tick
+on:
+  # Ticks are driven solely by the external cron-job.org job, which POSTs a
+  # workflow_dispatch on the :05/:35 slots, 13:00-21:59 UTC weekdays (see
+  # docs/cron-job-backup.md); run.py gates market hours precisely. GitHub's
+  # own `schedule` cron was removed 2026-07-13, mirroring the 52wk-poster:
+  # it delivered only ~3 of 18 slots and fired up to 45 min late, and in live
+  # mode a late fire lands in a different half-hour window than the dispatch,
+  # posting an extra ticker and exhausting the daily cap early.
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tick
+  cancel-in-progress: false
+
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Run tick
+        env:
+          # The DEDICATED relative-strength account (@STRelativeStrength) —
+          # distinct from the 52wk-poster's account.
+          STOCKTWITS_ACCESS_TOKEN: ${{ secrets.STOCKTWITS_ACCESS_TOKEN }}
+          # Launch ramp: 1 post/tick (a gentle 30-min trickle that dodges the
+          # duplicate filter), 12/day. Remove these two to restore 2/20 defaults.
+          MAX_PER_TICK: "1"
+          MAX_PER_DAY: "12"
+          PYTHONUNBUFFERED: "1"
+        # LIVE (since 2026-07-13): posts to @STRelativeStrength. Charts still
+        # render in-process (matplotlib + stockanalysis.com history, keyless);
+        # write-ahead intent + at-most-once state prevent double posts. To
+        # fall back to preview, drop the flags below (plain `python run.py`).
+        run: python run.py --sync-state --live
+      - name: Commit state + output
+        # main only: the rebase/push flow assumes the cron branch; a manual
+        # dispatch on a feature branch (e.g. testing a PR) must never push.
+        if: always() && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "rs-poster-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add state output
+          if git diff --cached --quiet; then
+            echo "nothing to record this tick"; exit 0
+          fi
+          git commit -m "tick: $(date -u +'%Y-%m-%dT%H:%M')"
+          git pull --rebase origin main
+          git push
