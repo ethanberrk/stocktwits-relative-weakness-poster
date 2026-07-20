@@ -9,7 +9,7 @@ from src.source.base import Candidate
 
 def _c(ticker, watchers=1):
     return Candidate(ticker=ticker, name=ticker, exchange="NASDAQ", price=1.0,
-                     pct_change_today=0.0, market_cap=2e9, week52_high=1.0,
+                     pct_change_today=0.0, market_cap=2e9, week52_low=1.0,
                      security_type="EQUITY", watchers=watchers)
 
 

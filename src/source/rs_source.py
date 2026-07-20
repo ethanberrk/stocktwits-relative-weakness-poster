@@ -19,7 +19,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import config
 from src.fetch import _UA, get_json
-from src.source.base import Candidate, HighsSource, SourceError
+from src.source.base import Candidate, LowsSource, SourceError
 
 # Stocktwits exchange string -> TradingView prefix the chart renderer shows.
 # Anything not here can't be charted reliably, so the row is dropped.
@@ -65,13 +65,13 @@ def _build_candidate(ticker: str, name: str, quote: dict,
         price=float(price),
         pct_change_today=float(quote.get("regularMarketChangePercent") or 0.0),
         market_cap=float(mcap),
-        week52_high=float(quote.get("fiftyTwoWeekHigh") or 0.0),
+        week52_low=float(quote.get("fiftyTwoWeekHigh") or 0.0),
         security_type=quote.get("quoteType") or "",
         watchers=int(wc),
     )
 
 
-class RSSource(HighsSource):
+class RSSource(LowsSource):
     def _wsj_universe(self) -> list[tuple[str, str]]:
         d = get_json(config.WSJ_MDC_URL)
         data = (d or {}).get("data") or {}

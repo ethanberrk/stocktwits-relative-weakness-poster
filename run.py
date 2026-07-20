@@ -14,10 +14,10 @@ from src.chart import ChartError, fetch_chart_png
 from src.publish.base import Publisher, compose_post_text
 from src.publish.dryrun import DryRunPublisher
 from src.publish.stocktwits_pub import PublishError, StocktwitsPublisher
-from src.source.base import HighsSource, SourceError
+from src.source.base import LowsSource, SourceError
 from src.source.rs_source import RSSource
 
-def tick(source: HighsSource, publisher: Publisher, chart_fetch,
+def tick(source: LowsSource, publisher: Publisher, chart_fetch,
          state_path: Path, now_utc: datetime, force: bool = False,
          symbol_check=lambda c: True, state_sync=None) -> list[str]:
     if not force and not state.is_market_hours(now_utc):
