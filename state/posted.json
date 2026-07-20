@@ -1,3 +1,16 @@
 {
-  "posts": []
+  "posts": [
+    {
+      "ticker": "ORCL",
+      "date": "2026-07-20",
+      "post_id": null,
+      "status": "posted"
+    },
+    {
+      "ticker": "BBAI",
+      "date": "2026-07-20",
+      "post_id": null,
+      "status": "posted"
+    }
+  ]
 }
