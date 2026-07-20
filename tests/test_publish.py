@@ -18,12 +18,12 @@ def _c(ticker="ABCD", watchers=9):
 
 def test_compose_post_text_exact():
     assert compose_post_text(_c("AAMI", 15)) == \
-        "$AAMI undiscovered breakout with 15 watchers"
+        "$AAMI crowded breakdown — 15 watchers along for the slide"
 
 
 def test_compose_post_text_uses_stocktwits_symbology():
     assert compose_post_text(_c("BRK-B", 100)) == \
-        "$BRK.B undiscovered breakout with 100 watchers"
+        "$BRK.B crowded breakdown — 100 watchers along for the slide"
 
 
 def test_dryrun_writes_artifacts_and_returns_dry_result(tmp_path):

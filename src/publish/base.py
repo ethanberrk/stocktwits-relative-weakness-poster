@@ -19,6 +19,8 @@ class Publisher(ABC):
 def compose_post_text(c: Candidate) -> str:
     # No price/%chg/mcap in the copy: those go stale between the tick and the
     # reader; the attached chart carries the quantitative story. Watcher count
-    # is stable enough to include and is the whole point of this feed.
+    # is stable enough to include and is the whole point of this feed. The
+    # line must never claim watchers are FALLING — we only see today's count.
     # Cashtag uses Stocktwits symbology (BRK.B, not Yahoo's BRK-B).
-    return f"${st_symbol(c.ticker)} undiscovered breakout with {c.watchers} watchers"
+    return (f"${st_symbol(c.ticker)} crowded breakdown — "
+            f"{c.watchers} watchers along for the slide")
