@@ -35,6 +35,18 @@
       "date": "2026-07-21",
       "post_id": null,
       "status": "posted"
+    },
+    {
+      "ticker": "NOC",
+      "date": "2026-07-21",
+      "post_id": null,
+      "status": "posted"
+    },
+    {
+      "ticker": "QXO",
+      "date": "2026-07-21",
+      "post_id": null,
+      "status": "posted"
     }
   ]
 }
