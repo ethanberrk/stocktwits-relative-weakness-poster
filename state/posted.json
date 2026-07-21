@@ -47,6 +47,18 @@
       "date": "2026-07-21",
       "post_id": null,
       "status": "posted"
+    },
+    {
+      "ticker": "CPRI",
+      "date": "2026-07-21",
+      "post_id": null,
+      "status": "posted"
+    },
+    {
+      "ticker": "CPRT",
+      "date": "2026-07-21",
+      "post_id": null,
+      "status": "posted"
     }
   ]
 }
