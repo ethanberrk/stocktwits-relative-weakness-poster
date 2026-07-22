@@ -125,6 +125,18 @@
       "date": "2026-07-21",
       "post_id": null,
       "status": "posted"
+    },
+    {
+      "ticker": "PEGA",
+      "date": "2026-07-22",
+      "post_id": null,
+      "status": "posted"
+    },
+    {
+      "ticker": "RDY",
+      "date": "2026-07-22",
+      "post_id": null,
+      "status": "posted"
     }
   ]
 }
