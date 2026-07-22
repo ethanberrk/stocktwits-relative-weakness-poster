@@ -25,26 +25,32 @@ def test_validate_allows_at_gate():
 
 
 def test_ranked_eligible_orders_by_most_watchers():
-    cands = [_c("HIGH", 5000), _c("LOW", 3), _c("MID", 400)]
+    cands = [_c("HIGH", 90000), _c("LOW", 6000), _c("MID", 40000)]
     ranked = select.ranked_eligible(cands, posted=[], today=date(2026, 7, 20))
     assert [c.ticker for c in ranked] == ["HIGH", "MID", "LOW"]
 
 
 def test_ranked_eligible_is_not_truncated():
-    cands = [_c(f"T{i}", i) for i in range(10)]
+    cands = [_c(f"T{i}", 5000 + i) for i in range(10)]
     ranked = select.ranked_eligible(cands, posted=[], today=date(2026, 7, 8))
     assert len(ranked) == 10  # full list, caps applied later via slot_count
 
 
 def test_ranked_eligible_excludes_below_market_cap():
-    cands = [_c("BIG", 1, mcap=2e9), _c("SMALL", 9999, mcap=5e8)]
+    cands = [_c("BIG", 6000, mcap=2e9), _c("SMALL", 9999, mcap=5e8)]
     ranked = select.ranked_eligible(cands, posted=[], today=date(2026, 7, 20))
     assert [c.ticker for c in ranked] == ["BIG"]  # SMALL dropped despite more watchers
 
 
+def test_ranked_eligible_excludes_below_watcher_floor():
+    cands = [_c("CROWDED", 5000), _c("QUIET", 4999)]
+    ranked = select.ranked_eligible(cands, posted=[], today=date(2026, 7, 22))
+    assert [c.ticker for c in ranked] == ["CROWDED"]  # floor is >=, like mcap
+
+
 def test_ranked_eligible_excludes_blocked():
     posted = [{"ticker": "A", "date": "2026-07-08"}]  # A already posted today
-    cands = [_c("A", 1), _c("B", 2)]
+    cands = [_c("A", 6000), _c("B", 7000)]
     ranked = select.ranked_eligible(cands, posted, today=date(2026, 7, 8))
     assert [c.ticker for c in ranked] == ["B"]
 

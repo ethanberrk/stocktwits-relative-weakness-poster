@@ -1,8 +1,10 @@
 # stocktwits-relative-weakness-poster
 
-Posts the **most-watched** US common stocks >$1B that printed a new 52-week
-**low** today to a **dedicated, new Stocktwits account**, each with a 1-year
-chart, framed as *crowded breakdowns*. Every 30 minutes the most-watched
+Posts the **most-watched** US common stocks >$1B **with ≥5,000 Stocktwits
+watchers** that printed a new 52-week **low** today to a **dedicated, new
+Stocktwits account**, each with a 1-year chart, framed as *crowded breakdowns*
+— the watcher floor is the point: a name below it has a normal amount of
+friends, not too many. Every 30 minutes the most-watched
 eligible names (max 2/tick, 20/day, never on consecutive trading days) get a
 `$TICKER crowded breakdown — {N} watchers along for the slide` post.
 
@@ -24,7 +26,8 @@ API, write-ahead intent, at-most-once safety).
 
 WSJ new-52wk-**lows** feed → Yahoo v7 bulk quotes, falling back to
 stockanalysis.com when Yahoo 429s → Stocktwits watchers
-(`src/source/rw_source.py`) → filter >$1B + rank **DESCENDING** by watchers,
+(`src/source/rw_source.py`) → filter >$1B and ≥`MIN_WATCHERS` (5,000) + rank
+**DESCENDING** by watchers,
 most-watched first (`src/select.py`) → self-rendered 1-yr candlestick PNG from
 stockanalysis.com history (`src/chart.py`, matplotlib, TradingView-light
 styling; a name whose history reaches back less than `MIN_HISTORY_DAYS` ≈ 11

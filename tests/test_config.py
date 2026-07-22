@@ -5,6 +5,12 @@ def test_min_market_cap_is_one_billion():
     assert config.MIN_MARKET_CAP == 1_000_000_000
 
 
+def test_min_watchers_is_5000():
+    # "Crowded breakdown" needs a crowd: ~1,000 watchers is the baseline for
+    # an anonymous $10B mid-cap, so the floor sits well above that.
+    assert config.MIN_WATCHERS == 5_000
+
+
 def test_default_caps():
     assert config.MAX_PER_TICK == 2
     assert config.MAX_PER_DAY == 20

@@ -18,11 +18,12 @@ def validate(candidates: list[Candidate]) -> None:
 
 def ranked_eligible(candidates: list[Candidate], posted: list[dict],
                     today: date) -> list[Candidate]:
-    """All postable candidates, MOST watchers first (no floor). Not capped —
+    """All postable candidates, MOST watchers first. Not capped —
     run.py walks this list and stops once it has enough that actually chart,
     so an un-chartable most-watched name can't starve the whole tick."""
     eligible = [c for c in candidates
                 if c.market_cap >= config.MIN_MARKET_CAP
+                and c.watchers >= config.MIN_WATCHERS
                 and not state.is_blocked(c.ticker, posted, today)]
     eligible.sort(key=lambda c: c.watchers, reverse=True)
     return eligible
