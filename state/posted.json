@@ -197,6 +197,18 @@
       "date": "2026-07-23",
       "post_id": null,
       "status": "posted"
+    },
+    {
+      "ticker": "PEP",
+      "date": "2026-07-23",
+      "post_id": null,
+      "status": "posted"
+    },
+    {
+      "ticker": "LOW",
+      "date": "2026-07-23",
+      "post_id": null,
+      "status": "posted"
     }
   ]
 }
