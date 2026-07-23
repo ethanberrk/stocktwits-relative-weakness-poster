@@ -221,6 +221,18 @@
       "date": "2026-07-23",
       "post_id": null,
       "status": "posted"
+    },
+    {
+      "ticker": "ORCL",
+      "date": "2026-07-23",
+      "post_id": null,
+      "status": "posted"
+    },
+    {
+      "ticker": "TTD",
+      "date": "2026-07-23",
+      "post_id": null,
+      "status": "posted"
     }
   ]
 }
