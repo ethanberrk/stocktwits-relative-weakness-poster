@@ -185,6 +185,18 @@
       "date": "2026-07-23",
       "post_id": null,
       "status": "posted"
+    },
+    {
+      "ticker": "WYNN",
+      "date": "2026-07-23",
+      "post_id": null,
+      "status": "posted"
+    },
+    {
+      "ticker": "UWMC",
+      "date": "2026-07-23",
+      "post_id": null,
+      "status": "posted"
     }
   ]
 }
