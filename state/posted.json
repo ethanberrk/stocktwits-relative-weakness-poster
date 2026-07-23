@@ -1,3 +1,10 @@
 {
-  "posts": []
+  "posts": [
+    {
+      "ticker": "IBM",
+      "date": "2026-07-23",
+      "post_id": "659885272",
+      "status": "posted"
+    }
+  ]
 }
