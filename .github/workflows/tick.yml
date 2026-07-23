@@ -29,13 +29,22 @@ jobs:
       - run: pip install -r requirements.txt
       - name: Run tick
         env:
+          # The DEDICATED relative-weakness account (@STRelativeWeakness,
+          # user id 11067943) — never the RS or 52wk accounts.
+          STOCKTWITS_ACCESS_TOKEN: ${{ secrets.STOCKTWITS_ACCESS_TOKEN }}
+          # Launch ramp: 1 post/tick (a 30-min trickle that dodges the
+          # duplicate filter), 20/day ceiling set by Ethan 2026-07-23. With
+          # 18 dispatch slots a day the trickle is the binding limit (<=18);
+          # the daily cap only bites if the per-tick cap is ever raised.
+          # Remove these two to restore the 2/20 config.py defaults.
+          MAX_PER_TICK: "1"
+          MAX_PER_DAY: "20"
           PYTHONUNBUFFERED: "1"
-        # PHASE 1 — PREVIEW: dry-run, no secrets. Writes would-be posts to
-        # output/YYYY-MM-DD/. Phase 2 (live) adds STOCKTWITS_ACCESS_TOKEN
-        # (the NEW dedicated relative-weakness account — never the RS or
-        # 52wk accounts) plus MAX_PER_TICK=1 / MAX_PER_DAY=12 ramp env vars,
-        # and flips this line to: python run.py --sync-state --live
-        run: python run.py
+        # LIVE (since 2026-07-24): posts to @STRelativeWeakness. Charts still
+        # render in-process (matplotlib + stockanalysis.com history, keyless);
+        # write-ahead intent + at-most-once state prevent double posts. To
+        # fall back to preview, drop the flags below (plain `python run.py`).
+        run: python run.py --sync-state --live
       - name: Commit state + output
         # main only: the rebase/push flow assumes the cron branch; a manual
         # dispatch on a feature branch (e.g. testing a PR) must never push.
