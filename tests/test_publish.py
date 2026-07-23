@@ -21,6 +21,13 @@ def test_compose_post_text_exact():
         "$AAMI crowded breakdown — 15 watchers along for the slide"
 
 
+def test_compose_post_text_comma_separates_thousands():
+    assert compose_post_text(_c("IBM", 69375)) == \
+        "$IBM crowded breakdown — 69,375 watchers along for the slide"
+    assert compose_post_text(_c("BIG", 1234567)) == \
+        "$BIG crowded breakdown — 1,234,567 watchers along for the slide"
+
+
 def test_compose_post_text_uses_stocktwits_symbology():
     assert compose_post_text(_c("BRK-B", 100)) == \
         "$BRK.B crowded breakdown — 100 watchers along for the slide"

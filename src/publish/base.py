@@ -23,4 +23,4 @@ def compose_post_text(c: Candidate) -> str:
     # line must never claim watchers are FALLING — we only see today's count.
     # Cashtag uses Stocktwits symbology (BRK.B, not Yahoo's BRK-B).
     return (f"${st_symbol(c.ticker)} crowded breakdown — "
-            f"{c.watchers} watchers along for the slide")
+            f"{c.watchers:,} watchers along for the slide")

@@ -35,7 +35,7 @@ def test_tick_posts_most_watched_and_records_state(tmp_path, monkeypatch):
     done = run.tick(FakeSource([_c("CROWD", 90000), _c("QUIET", 6000)]), pub,
                     chart_fetch=lambda c: b"PNG", state_path=sp, now_utc=now)
     assert done == ["CROWD"]
-    assert pub.posted == [("CROWD", "$CROWD crowded breakdown — 90000 watchers along for the slide")]
+    assert pub.posted == [("CROWD", "$CROWD crowded breakdown — 90,000 watchers along for the slide")]
     e = [p for p in state.load_posted(sp) if p["ticker"] == "CROWD"][0]
     assert e["status"] == "posted" and e["post_id"] == "id-CROWD"
 
@@ -73,4 +73,4 @@ def test_tick_backfills_when_top_pick_chart_fails(tmp_path, monkeypatch):
     done = run.tick(FakeSource([_c("CROWD", 90000), _c("MID", 8000)]), pub,
                     chart_fetch=chart_fetch, state_path=sp, now_utc=now)
     assert done == ["MID"]  # backfilled past the un-chartable most-watched name
-    assert pub.posted == [("MID", "$MID crowded breakdown — 8000 watchers along for the slide")]
+    assert pub.posted == [("MID", "$MID crowded breakdown — 8,000 watchers along for the slide")]
