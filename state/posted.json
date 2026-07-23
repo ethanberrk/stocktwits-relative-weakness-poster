@@ -257,6 +257,18 @@
       "date": "2026-07-23",
       "post_id": null,
       "status": "posted"
+    },
+    {
+      "ticker": "AZO",
+      "date": "2026-07-23",
+      "post_id": null,
+      "status": "posted"
+    },
+    {
+      "ticker": "ACI",
+      "date": "2026-07-23",
+      "post_id": null,
+      "status": "posted"
     }
   ]
 }
