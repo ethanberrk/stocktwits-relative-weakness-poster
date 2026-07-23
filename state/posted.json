@@ -233,6 +233,18 @@
       "date": "2026-07-23",
       "post_id": null,
       "status": "posted"
+    },
+    {
+      "ticker": "MP",
+      "date": "2026-07-23",
+      "post_id": null,
+      "status": "posted"
+    },
+    {
+      "ticker": "CELH",
+      "date": "2026-07-23",
+      "post_id": null,
+      "status": "posted"
     }
   ]
 }
