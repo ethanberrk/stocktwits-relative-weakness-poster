@@ -173,6 +173,18 @@
       "date": "2026-07-22",
       "post_id": null,
       "status": "posted"
+    },
+    {
+      "ticker": "IBM",
+      "date": "2026-07-23",
+      "post_id": null,
+      "status": "posted"
+    },
+    {
+      "ticker": "QS",
+      "date": "2026-07-23",
+      "post_id": null,
+      "status": "posted"
     }
   ]
 }
