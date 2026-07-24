@@ -53,6 +53,12 @@
       "date": "2026-07-24",
       "post_id": "659959008",
       "status": "posted"
+    },
+    {
+      "ticker": "UBER",
+      "date": "2026-07-24",
+      "post_id": null,
+      "status": "pending"
     }
   ]
 }
