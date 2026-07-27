@@ -59,6 +59,12 @@
       "date": "2026-07-24",
       "post_id": "659981289",
       "status": "posted"
+    },
+    {
+      "ticker": "PSKY",
+      "date": "2026-07-27",
+      "post_id": null,
+      "status": "pending"
     }
   ]
 }
