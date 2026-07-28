@@ -65,6 +65,12 @@
       "date": "2026-07-27",
       "post_id": "660077476",
       "status": "posted"
+    },
+    {
+      "ticker": "BBAI",
+      "date": "2026-07-28",
+      "post_id": null,
+      "status": "pending"
     }
   ]
 }
