@@ -215,6 +215,12 @@
       "date": "2026-08-04",
       "post_id": "660854071",
       "status": "posted"
+    },
+    {
+      "ticker": "NRG",
+      "date": "2026-08-04",
+      "post_id": null,
+      "status": "pending"
     }
   ]
 }
