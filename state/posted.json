@@ -221,6 +221,12 @@
       "date": "2026-08-04",
       "post_id": "660875074",
       "status": "posted"
+    },
+    {
+      "ticker": "CCI",
+      "date": "2026-08-05",
+      "post_id": null,
+      "status": "pending"
     }
   ]
 }
