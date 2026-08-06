@@ -233,6 +233,12 @@
       "date": "2026-08-05",
       "post_id": "661030052",
       "status": "posted"
+    },
+    {
+      "ticker": "CELH",
+      "date": "2026-08-06",
+      "post_id": null,
+      "status": "pending"
     }
   ]
 }
