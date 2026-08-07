@@ -257,6 +257,12 @@
       "date": "2026-08-06",
       "post_id": "661139096",
       "status": "posted"
+    },
+    {
+      "ticker": "TTD",
+      "date": "2026-08-07",
+      "post_id": null,
+      "status": "pending"
     }
   ]
 }
