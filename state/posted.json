@@ -305,6 +305,12 @@
       "date": "2026-08-17",
       "post_id": "662052152",
       "status": "posted"
+    },
+    {
+      "ticker": "NKE",
+      "date": "2026-08-17",
+      "post_id": null,
+      "status": "pending"
     }
   ]
 }
