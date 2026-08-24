@@ -383,6 +383,12 @@
       "date": "2026-08-24",
       "post_id": "662683974",
       "status": "posted"
+    },
+    {
+      "ticker": "XPEV",
+      "date": "2026-08-24",
+      "post_id": null,
+      "status": "pending"
     }
   ]
 }
