@@ -485,6 +485,12 @@
       "date": "2026-08-31",
       "post_id": "663253395",
       "status": "posted"
+    },
+    {
+      "ticker": "TJX",
+      "date": "2026-08-31",
+      "post_id": null,
+      "status": "pending"
     }
   ]
 }
