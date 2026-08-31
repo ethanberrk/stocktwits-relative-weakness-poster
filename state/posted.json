@@ -479,6 +479,12 @@
       "date": "2026-08-31",
       "post_id": "663249752",
       "status": "posted"
+    },
+    {
+      "ticker": "LVS",
+      "date": "2026-08-31",
+      "post_id": null,
+      "status": "pending"
     }
   ]
 }
