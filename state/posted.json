@@ -527,6 +527,12 @@
       "date": "2026-09-01",
       "post_id": "663332060",
       "status": "posted"
+    },
+    {
+      "ticker": "EOSE",
+      "date": "2026-09-01",
+      "post_id": null,
+      "status": "pending"
     }
   ]
 }
