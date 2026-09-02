@@ -563,6 +563,12 @@
       "date": "2026-09-02",
       "post_id": "663423068",
       "status": "posted"
+    },
+    {
+      "ticker": "OPEN",
+      "date": "2026-09-02",
+      "post_id": null,
+      "status": "pending"
     }
   ]
 }
