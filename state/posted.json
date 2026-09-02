@@ -557,6 +557,12 @@
       "date": "2026-09-01",
       "post_id": "663374311",
       "status": "posted"
+    },
+    {
+      "ticker": "NIO",
+      "date": "2026-09-02",
+      "post_id": null,
+      "status": "pending"
     }
   ]
 }
