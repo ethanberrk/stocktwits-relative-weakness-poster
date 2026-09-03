@@ -605,6 +605,12 @@
       "date": "2026-09-03",
       "post_id": "663525546",
       "status": "posted"
+    },
+    {
+      "ticker": "MCD",
+      "date": "2026-09-03",
+      "post_id": null,
+      "status": "pending"
     }
   ]
 }
