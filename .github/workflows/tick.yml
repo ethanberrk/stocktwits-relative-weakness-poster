@@ -32,6 +32,13 @@ jobs:
           # The DEDICATED relative-weakness account (@STRelativeWeakness,
           # user id 11067943) — never the RS or 52wk accounts.
           STOCKTWITS_ACCESS_TOKEN: ${{ secrets.STOCKTWITS_ACCESS_TOKEN }}
+          # Data-source switch (repository VARIABLE, Settings > Secrets and
+          # variables > Actions > Variables). `legacy` = scraped WSJ/Yahoo/
+          # stockanalysis feeds; `xignite` = licensed Xignite feed. Flip it
+          # there to go live or to revert — no code change, next tick picks
+          # it up. Unset = legacy.
+          DATA_SOURCE: ${{ vars.DATA_SOURCE || 'legacy' }}
+          XIGNITE_TOKEN: ${{ secrets.XIGNITE_TOKEN }}
           # Launch ramp: 1 post/tick (a 30-min trickle that dodges the
           # duplicate filter), 20/day ceiling set by Ethan 2026-07-23. With
           # 18 dispatch slots a day the trickle is the binding limit (<=18);
@@ -45,6 +52,17 @@ jobs:
         # write-ahead intent + at-most-once state prevent double posts. To
         # fall back to preview, drop the flags below (plain `python run.py`).
         run: python run.py --sync-state --live
+      - name: Shadow compare (other data source, never posts)
+        # Runs the source that is NOT active and diffs it against what the
+        # tick saw; writes shadow/<date>/<HHMM>.json. Read with
+        # scripts/shadow_report.py. Set repository variable SHADOW=off to stop.
+        if: always() && vars.SHADOW != 'off'
+        continue-on-error: true
+        env:
+          DATA_SOURCE: ${{ vars.DATA_SOURCE || 'legacy' }}
+          XIGNITE_TOKEN: ${{ secrets.XIGNITE_TOKEN }}
+          PYTHONUNBUFFERED: "1"
+        run: python scripts/shadow.py
       - name: Commit state + output
         # main only: the rebase/push flow assumes the cron branch; a manual
         # dispatch on a feature branch (e.g. testing a PR) must never push.
@@ -52,7 +70,7 @@ jobs:
         run: |
           git config user.name "rw-poster-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add state output
+          git add state output shadow
           if git diff --cached --quiet; then
             echo "nothing to record this tick"; exit 0
           fi
