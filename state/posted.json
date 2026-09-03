@@ -599,6 +599,12 @@
       "date": "2026-09-02",
       "post_id": "663451541",
       "status": "posted"
+    },
+    {
+      "ticker": "PSNY",
+      "date": "2026-09-03",
+      "post_id": null,
+      "status": "pending"
     }
   ]
 }
