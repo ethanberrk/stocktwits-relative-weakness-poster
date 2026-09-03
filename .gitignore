@@ -4,3 +4,6 @@ __pycache__/
 .pytest_cache/
 .DS_Store
 .superpowers/
+
+# raw per-tick candidate dumps; scripts/shadow.py replaces them with the diff
+shadow/**/*.active.json

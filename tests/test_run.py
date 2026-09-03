@@ -74,3 +74,31 @@ def test_tick_backfills_when_top_pick_chart_fails(tmp_path, monkeypatch):
                     chart_fetch=chart_fetch, state_path=sp, now_utc=now)
     assert done == ["MID"]  # backfilled past the un-chartable most-watched name
     assert pub.posted == [("MID", "$MID crowded breakdown — 8,000 watchers along for the slide")]
+
+
+# --- data-source switch + shadow dump ----------------------------------------
+
+def test_build_source_follows_switch(monkeypatch):
+    import pytest
+    import config
+    from src.source.rw_source import RWSource
+    from src.source.xignite_source import XigniteSource
+    monkeypatch.setattr(config, "DATA_SOURCE", "legacy")
+    assert isinstance(run.build_source(), RWSource)
+    monkeypatch.setattr(config, "DATA_SOURCE", "xignite")
+    assert isinstance(run.build_source(), XigniteSource)
+    assert isinstance(run.build_source("legacy"), RWSource)
+    with pytest.raises(SystemExit):
+        run.build_source("yahoo-please")
+
+
+def test_tick_dumps_candidates_for_shadow(tmp_path):
+    import json
+    now = datetime(2026, 7, 1, 14, 0, tzinfo=timezone.utc)
+    dump = tmp_path / "shadow" / "2026-07-01" / "1400.active.json"
+    run.tick(FakeSource([_c("BIG", 9000), _c("SM", 5000)]), FakePublisher(),
+             lambda c: b"PNG", tmp_path / "p.json", now, dump_to=dump)
+    d = json.loads(dump.read_text())
+    assert [c["ticker"] for c in d["candidates"]] == ["BIG", "SM"]
+    assert d["candidates"][0]["watchers"] == 9000
+    assert d["time"].startswith("2026-07-01T14:00")

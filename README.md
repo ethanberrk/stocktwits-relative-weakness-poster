@@ -41,6 +41,24 @@ next most-watched name takes the slot) → publisher (`src/publish/`) →
     python -m pytest              # unit tests
     python run.py --force         # one dry-run tick, any time — no keys needed
 
+## Data source switch (Xignite vs legacy scraping)
+
+`DATA_SOURCE` picks where candidates AND chart history come from:
+
+- `legacy` (default) — WSJ new-lows list + Yahoo/stockanalysis quotes + stockanalysis.com charts (scraped, unofficial)
+- `xignite` — Ethan's licensed Xignite subscription (needs `XIGNITE_TOKEN`); watcher counts still come from the public Stocktwits endpoint
+
+In CI it is the repository **variable** `DATA_SOURCE` (Settings → Secrets and
+variables → Actions → Variables). Set it to `xignite` to switch, back to
+`legacy` (or delete it) to revert — no deploy, the next tick obeys it.
+Locally: `python run.py --source xignite --force`.
+
+Every tick also runs `scripts/shadow.py`, which fetches the *other* source and
+writes `shadow/<date>/<HHMM>.json` (overlap, names only one feed saw, and what
+each feed would have picked). `python scripts/shadow_report.py [date]` prints a
+day's agreement. Repository variable `SHADOW=off` disables it. Design:
+`docs/superpowers/specs/2026-09-03-xignite-data-source-design.md`.
+
 ## Ops
 
 - Cron: `.github/workflows/tick.yml`, dispatched every 30 min during market
