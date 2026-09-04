@@ -1,0 +1,22 @@
+{
+ "time": "2026-09-04T17:35:35+00:00",
+ "active": "legacy",
+ "shadow": "xignite",
+ "counts": {
+  "active": 14,
+  "shadow": 13,
+  "both": 12
+ },
+ "only_in_active": [
+  "LYNX",
+  "PSQL"
+ ],
+ "only_in_shadow": [
+  "EVCM"
+ ],
+ "would_pick": {
+  "legacy": [],
+  "xignite": []
+ },
+ "picks_agree": true
+}
