@@ -1,0 +1,25 @@
+{
+ "time": "2026-09-04T13:35:33+00:00",
+ "active": "legacy",
+ "shadow": "xignite",
+ "counts": {
+  "active": 7,
+  "shadow": 0,
+  "both": 0
+ },
+ "only_in_active": [
+  "ENOV",
+  "LHX",
+  "LULU",
+  "OLN",
+  "PSQL",
+  "ROL",
+  "WINA"
+ ],
+ "only_in_shadow": [],
+ "would_pick": {
+  "legacy": [],
+  "xignite": []
+ },
+ "picks_agree": true
+}
