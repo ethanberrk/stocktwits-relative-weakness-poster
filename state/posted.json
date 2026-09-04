@@ -623,6 +623,12 @@
       "date": "2026-09-03",
       "post_id": "663543145",
       "status": "posted"
+    },
+    {
+      "ticker": "LULU",
+      "date": "2026-09-04",
+      "post_id": null,
+      "status": "pending"
     }
   ]
 }
